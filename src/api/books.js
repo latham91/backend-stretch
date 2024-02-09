@@ -3,7 +3,7 @@ const BookService = require("../services/bookService");
 module.exports = (app) => {
     const bookService = new BookService();
 
-    // Get all books
+    // Get all books and get a book by title
     app.get("/books", async (req, res, next) => {
         const { title } = req.body;
         try {
@@ -34,6 +34,7 @@ module.exports = (app) => {
         }
     });
 
+    // Update a book using the books title
     app.patch("/books", async (req, res, next) => {
         const { searchTitle, title, author } = req.body;
 
@@ -62,6 +63,7 @@ module.exports = (app) => {
         }
     });
 
+    // Delete a book using the books title
     app.delete("/books", async (req, res, next) => {
         const { title } = req.body;
 
