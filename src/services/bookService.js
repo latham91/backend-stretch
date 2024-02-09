@@ -31,6 +31,24 @@ class BookService {
             console.log(error);
         }
     }
+
+    async updateBook(searchTitle, book) {
+        try {
+            const updatedBook = await this.repository.updateBook(searchTitle, book);
+            return updatedBook;
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
+    async deleteBook(title) {
+        try {
+            const deletedBook = await this.repository.deleteBook(title);
+            return deletedBook;
+        } catch (error) {
+            console.log(error);
+        }
+    }
 }
 
 module.exports = BookService;

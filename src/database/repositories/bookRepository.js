@@ -24,6 +24,22 @@ class BookRepository {
             console.log(error);
         }
     }
+
+    async updateBook(searchTitle, book) {
+        try {
+            return BookModel.findOneAndUpdate({ title: searchTitle }, book, { new: true });
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
+    async deleteBook(title) {
+        try {
+            return BookModel.findOneAndDelete({ title });
+        } catch (error) {
+            console.log(error);
+        }
+    }
 }
 
 module.exports = BookRepository;
