@@ -1,4 +1,4 @@
-const { NotFoundError, APIError } = require("../../utils/appErrors");
+const { STATUS_CODES, APIError } = require("../../utils/appErrors");
 const { BookModel } = require("../models");
 
 class BookRepository {
@@ -6,7 +6,7 @@ class BookRepository {
         try {
             return await BookModel.find();
         } catch (error) {
-            throw new APIError("Not found");
+            throw new APIError("API Error", STATUS_CODES.INTERNAL_ERROR, "Failed to retrieve books");
         }
     }
 
@@ -14,7 +14,7 @@ class BookRepository {
         try {
             return await BookModel.findById(bookId);
         } catch (error) {
-            throw new APIError("Not found");
+            throw new APIError("API Error", STATUS_CODES.INTERNAL_ERROR, "Failed to retrieve book");
         }
     }
 
@@ -22,7 +22,7 @@ class BookRepository {
         try {
             return await BookModel.create(book);
         } catch (error) {
-            console.log(error);
+            throw new APIError("API Error", STATUS_CODES.INTERNAL_ERROR, "Failed to add book");
         }
     }
 
@@ -30,7 +30,7 @@ class BookRepository {
         try {
             return BookModel.findOneAndUpdate({ title: searchTitle }, book, { new: true });
         } catch (error) {
-            console.log(error);
+            throw new APIError("API Error", STATUS_CODES.INTERNAL_ERROR, "Failed to update book");
         }
     }
 
@@ -38,7 +38,7 @@ class BookRepository {
         try {
             return BookModel.findOneAndDelete({ title });
         } catch (error) {
-            console.log(error);
+            throw new APIError("API Error", STATUS_CODES.INTERNAL_ERROR, "Failed to delete book");
         }
     }
 }
