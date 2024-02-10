@@ -1,4 +1,6 @@
 const BookRepository = require("../database/repositories/bookRepository");
+const { NotFoundError } = require("../utils/appErrors");
+const { booksValidation } = require("../utils/validations");
 
 class BookService {
     constructor() {
@@ -8,18 +10,18 @@ class BookService {
     async getBooks() {
         try {
             const books = await this.repository.books();
-            return books;
+            return booksValidation(books);
         } catch (error) {
-            console.log(error);
+            throw new NotFoundError("Data not found");
         }
     }
 
-    async getBook(title) {
+    async getBook(bookId) {
         try {
-            const book = await this.repository.book(title);
-            return book;
+            const book = await this.repository.book(bookId);
+            return booksValidation(book);
         } catch (error) {
-            console.log(error);
+            throw new NotFoundError("Data not found");
         }
     }
 

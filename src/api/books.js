@@ -3,22 +3,22 @@ const BookService = require("../services/bookService");
 module.exports = (app) => {
     const bookService = new BookService();
 
-    // Get all books and get a book by title
+    // Get all books
     app.get("/books", async (req, res, next) => {
-        const { title } = req.body;
         try {
-            if (!title) {
-                const books = await bookService.getBooks();
-                return res.status(200).json({ success: true, count: books.length, data: books });
-            }
+            const books = await bookService.getBooks();
+            return res.status(200).json(books);
+        } catch (error) {
+            next(error);
+        }
+    });
 
-            const book = await bookService.getBook(title);
-
-            if (!book) {
-                return res.status(404).json({ success: false, message: "Book not found" });
-            }
-
-            return res.status(200).json({ success: true, data: book });
+    // Get a single book by id
+    app.get("/books/:bookId", async (req, res, next) => {
+        try {
+            const { bookId } = req.params;
+            const book = await bookService.getBook(bookId);
+            return res.status(200).json(book);
         } catch (error) {
             next(error);
         }
@@ -36,27 +36,13 @@ module.exports = (app) => {
 
     // Update a book using the books title
     app.patch("/books", async (req, res, next) => {
-        const { searchTitle, title, author } = req.body;
-
-        if (!searchTitle) {
-            return res.status(400).json({ success: false, message: "Please provide a title to update" });
-        }
-
-        if (!title && !author) {
-            return res.status(400).json({ success: false, message: "Please provide a title or author to update" });
-        }
-
         try {
             const updatedBook = {
-                title,
-                author,
+                title: req.body.title,
+                author: req.body.author,
             };
+
             const book = await bookService.updateBook(req.body.searchTitle, updatedBook);
-
-            if (!book) {
-                return res.status(404).json({ success: false, message: "Book not found" });
-            }
-
             return res.status(200).json({ success: true, data: book });
         } catch (error) {
             next(error);
@@ -65,19 +51,8 @@ module.exports = (app) => {
 
     // Delete a book using the books title
     app.delete("/books", async (req, res, next) => {
-        const { title } = req.body;
-
-        if (!title) {
-            return res.status(400).json({ success: false, message: "Please provide a title to delete" });
-        }
-
         try {
             const book = await bookService.deleteBook(title);
-
-            if (!book) {
-                return res.status(404).json({ success: false, message: "Book not found" });
-            }
-
             return res.status(200).json({ success: true, data: {} });
         } catch (error) {
             next(error);

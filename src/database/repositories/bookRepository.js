@@ -1,3 +1,4 @@
+const { APIError, STATUS_CODES } = require("../../utils/appErrors");
 const { BookModel } = require("../models");
 
 class BookRepository {
@@ -9,11 +10,11 @@ class BookRepository {
         }
     }
 
-    async book(title) {
+    async book(bookId) {
         try {
-            return await BookModel.findOne({ title });
+            return await BookModel.findById(bookId);
         } catch (error) {
-            console.log(error);
+            throw new APIError("API Error", STATUS_CODES.INTERNAL_ERROR, error.message);
         }
     }
 
