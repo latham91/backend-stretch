@@ -34,15 +34,17 @@ module.exports = (app) => {
         }
     });
 
-    // Update a book using the books title
-    app.patch("/books", async (req, res, next) => {
+    // Update a book using the books id
+    app.patch("/books/:bookId", async (req, res, next) => {
         try {
+            const { bookId } = req.params;
+
             const updatedBook = {
                 title: req.body.title,
                 author: req.body.author,
             };
 
-            const book = await bookService.updateBook(req.body.searchTitle, updatedBook);
+            const book = await bookService.updateBook(bookId, updatedBook);
             return res.status(200).json({ success: true, data: book });
         } catch (error) {
             next(error);

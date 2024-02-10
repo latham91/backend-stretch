@@ -1,4 +1,4 @@
-const { STATUS_CODES, APIError } = require("../../utils/appErrors");
+const { APIError } = require("../../utils/appErrors");
 const { BookModel } = require("../models");
 
 class BookRepository {
@@ -6,7 +6,7 @@ class BookRepository {
         try {
             return await BookModel.find();
         } catch (error) {
-            throw new APIError("API Error", STATUS_CODES.INTERNAL_ERROR, "Failed to retrieve books");
+            throw new APIError("API Error", 500, error.message);
         }
     }
 
@@ -14,7 +14,7 @@ class BookRepository {
         try {
             return await BookModel.findById(bookId);
         } catch (error) {
-            throw new APIError("API Error", STATUS_CODES.INTERNAL_ERROR, "Failed to retrieve book");
+            throw new APIError("API Error", 500, error.message);
         }
     }
 
@@ -22,23 +22,23 @@ class BookRepository {
         try {
             return await BookModel.create(book);
         } catch (error) {
-            throw new APIError("API Error", STATUS_CODES.INTERNAL_ERROR, "Failed to add book");
+            throw new APIError("API Error", 500, error.message);
         }
     }
 
-    async updateBook(searchTitle, book) {
+    async updateBook(bookId, book) {
         try {
-            return BookModel.findOneAndUpdate({ title: searchTitle }, book, { new: true });
+            return BookModel.findByIdAndUpdate(bookId, book, { new: true });
         } catch (error) {
-            throw new APIError("API Error", STATUS_CODES.INTERNAL_ERROR, "Failed to update book");
+            throw new APIError("API Error", 500, error.message);
         }
     }
 
-    async deleteBook(title) {
+    async deleteBook(bookId) {
         try {
-            return BookModel.findOneAndDelete({ title });
+            return BookModel.findByIdAndDelete(bookId);
         } catch (error) {
-            throw new APIError("API Error", STATUS_CODES.INTERNAL_ERROR, "Failed to delete book");
+            throw new APIError("API Error", 500, error.message);
         }
     }
 }

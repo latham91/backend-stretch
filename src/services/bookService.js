@@ -1,6 +1,6 @@
 const BookRepository = require("../database/repositories/bookRepository");
 const { APIError } = require("../utils/appErrors");
-const { booksValidation } = require("../utils/validations");
+const { getValidations, postValidations } = require("../utils/validations");
 
 class BookService {
     constructor() {
@@ -10,7 +10,7 @@ class BookService {
     async getBooks() {
         try {
             const books = await this.repository.books();
-            return booksValidation(books);
+            return getValidations(books);
         } catch (error) {
             throw new APIError("Data not found");
         }
@@ -19,7 +19,7 @@ class BookService {
     async getBook(bookId) {
         try {
             const book = await this.repository.book(bookId);
-            return booksValidation(book, bookId);
+            return getValidations(book, bookId);
         } catch (error) {
             throw new APIError("Data not found");
         }
@@ -28,9 +28,9 @@ class BookService {
     async addNewBook(book) {
         try {
             const newBook = await this.repository.addBook(book);
-            return newBook;
+            return postValidations(book, newBook);
         } catch (error) {
-            throw new APIError("Data not found");
+            throw new APIError(error.message, 500, error.description);
         }
     }
 
