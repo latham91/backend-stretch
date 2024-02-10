@@ -1,4 +1,4 @@
-const { APIError, STATUS_CODES } = require("../../utils/appErrors");
+const { NotFoundError, APIError } = require("../../utils/appErrors");
 const { BookModel } = require("../models");
 
 class BookRepository {
@@ -6,7 +6,7 @@ class BookRepository {
         try {
             return await BookModel.find();
         } catch (error) {
-            console.log(error);
+            throw new APIError("Not found");
         }
     }
 
@@ -14,7 +14,7 @@ class BookRepository {
         try {
             return await BookModel.findById(bookId);
         } catch (error) {
-            throw new APIError("API Error", STATUS_CODES.INTERNAL_ERROR, error.message);
+            throw new APIError("Not found");
         }
     }
 

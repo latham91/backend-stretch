@@ -1,5 +1,5 @@
 const BookRepository = require("../database/repositories/bookRepository");
-const { NotFoundError } = require("../utils/appErrors");
+const { APIError } = require("../utils/appErrors");
 const { booksValidation } = require("../utils/validations");
 
 class BookService {
@@ -12,16 +12,16 @@ class BookService {
             const books = await this.repository.books();
             return booksValidation(books);
         } catch (error) {
-            throw new NotFoundError("Data not found");
+            throw new APIError("Data not found");
         }
     }
 
     async getBook(bookId) {
         try {
             const book = await this.repository.book(bookId);
-            return booksValidation(book);
+            return booksValidation(book, bookId);
         } catch (error) {
-            throw new NotFoundError("Data not found");
+            throw new APIError("Data not found");
         }
     }
 
@@ -30,7 +30,7 @@ class BookService {
             const newBook = await this.repository.addBook(book);
             return newBook;
         } catch (error) {
-            console.log(error);
+            throw new APIError("Data not found");
         }
     }
 
@@ -39,7 +39,7 @@ class BookService {
             const updatedBook = await this.repository.updateBook(searchTitle, book);
             return updatedBook;
         } catch (error) {
-            console.log(error);
+            throw new APIError("Data not found");
         }
     }
 
@@ -48,7 +48,7 @@ class BookService {
             const deletedBook = await this.repository.deleteBook(title);
             return deletedBook;
         } catch (error) {
-            console.log(error);
+            throw new APIError("Data not found");
         }
     }
 }
